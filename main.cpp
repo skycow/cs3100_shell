@@ -4,6 +4,7 @@
 #include <string>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <cstring>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ int main(int argc, char* argv[])
 {
   vector<string> history;
   string input;
-  std::chrono::duration<double> time;
+  std::chrono::duration<double> time(0);
 
   cout << "[cmd]: " ;
   getline(cin, input);
@@ -32,17 +33,17 @@ int main(int argc, char* argv[])
     else
     {
       bool error(false);
-      if (input[0] == "^")
+      if (input[0] == '^')
       {
         input = input.substr(2);
         int index = stoi(input);
-        if(input < history.length())
+        if(index < history.size())
         {
-          input = history[i];
+          input = history[index];
         }
         else
         {
-          cout << "Error: Command " << input << " not in history."
+          cout << "Error: Command " << input << " not in history." << endl;
           error = true;
         }
       }
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 
         history.push_back(input);
         
-        pid = fork();
+        auto pid = fork();
         
         if(pid)
         {
@@ -68,29 +69,29 @@ int main(int argc, char* argv[])
           vector<string> newinputs;
           int first=0;
           
-          for(int i = 0; i < input.length(); i++)
+          for(int i = 0; i < input.size(); i++)
           {
-            if(input[i] == " ")
+            if(input[i] == ' ')
             {
-              if(input[first] != " ")
+              if(input[first] != ' ')
               {
-                vector.push_back(input.substr(first, i-1))
+                newinputs.push_back(input.substr(first, i-1));
               }
-              if(input[i+1] != " ")
+              if(input[i+1] != ' ')
               {
                 first = i+1;
               }
             }
           }
           
-          char ** newargv = new char*[newinputs.length()+1];
+          char ** newargv = new char*[newinputs.size()+1];
 
-          for(int i = 0; i < newinputs.length(); i++)
+          for(int i = 0; i < newinputs.size(); i++)
           {
-            newargv[i] = new char[newinputs[i].length+1];
-            strcpy(newargv[i], newinputs[i]);
+            newargv[i] = new char[newinputs[i].size()+1];
+            strcpy(newargv[i], newinputs[i].c_str());
           }
-          newargv[newinputs.length()] = NULL; 
+          newargv[newinputs.size()] = NULL; 
           
           execvp(argv[0], argv);
 //          cout << "Running " << input << endl;
