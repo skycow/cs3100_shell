@@ -53,10 +53,14 @@ int main(int argc, char* argv[])
 
         history.push_back(input);
         
-        auto pid = fork();
+        //auto pid = fork();
         
-        if(pid)
+        if(fork())
         {
+          
+          cout << "enter p" << endl;
+          temp = 1;
+          
           std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
           wait(NULL);
           std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
@@ -66,6 +70,10 @@ int main(int argc, char* argv[])
         }
         else 
         {
+          
+          cout << "enter c" << endl;
+          temp = 2;
+          
           vector<string> newinputs;
           int first=0;
           
@@ -93,9 +101,10 @@ int main(int argc, char* argv[])
           }
           newargv[newinputs.size()] = NULL; 
           
-          execvp(argv[0], argv);
-//          cout << "Running " << input << endl;
           
+          execvp(newargv[0], newargv);
+          cout << "Running " << input << endl;
+          exit(0);
         }
       }
     }
