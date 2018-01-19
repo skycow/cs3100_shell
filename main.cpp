@@ -59,7 +59,6 @@ int main(int argc, char* argv[])
         {
           
           cout << "enter p" << endl;
-          temp = 1;
           
           std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
           wait(NULL);
@@ -72,7 +71,6 @@ int main(int argc, char* argv[])
         {
           
           cout << "enter c" << endl;
-          temp = 2;
           
           vector<string> newinputs;
           int first=0;
